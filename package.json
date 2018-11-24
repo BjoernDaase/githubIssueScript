@@ -9,9 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "fs": "0.0.1-security",
-    "jsdom": "^11.11.0",
-    "nodemailer": "^4.6.5",
     "request": "^2.85.0"
   }
 }
