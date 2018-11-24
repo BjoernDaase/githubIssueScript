@@ -13,7 +13,7 @@ function issueData(issue){                      // parses the individual issues
         config.substitutioner.substitute(issue.body)]
 }
 
-function texIt(number, header, body){
+function texIt(number, header, body){           // wraps an issue and gives it a header
     let text = ''
     text += '\\begin{minipage}{\\textwidth}'
     text += `\\section{\\#${number}: ${header}}\n`
@@ -56,15 +56,19 @@ function texAll(issues){    // appends all filtered issues in one file after par
     return text
 }
 
+function ensurePath(path){
+    if (!fs.existsSync(path)) {
+        fs.mkdirSync(path);
+    }
+}
+
 request(requestAdress, function (error, response, body) {
     let path = './issues/', title = 'issues.tex'
     if (!error) {
         let results = JSON.parse(body)
         const relevantResults = results.filter(issue => issue.labels.map(x => x.name).includes(issueFilterLabel))
 
-        if (!fs.existsSync(path)) {
-            fs.mkdirSync(path);
-        }
+        ensurePath(path);
 
         fs.writeFile(path + title,
             texAll(relevantResults), 
