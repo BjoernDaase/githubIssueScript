@@ -7,6 +7,7 @@
 ``` npm install ```
 
 ## Usage
+* Adjust the settings in the Configuration.js
 * In the cloned folder execute:
 ``` npm run fetchIssues ```
 * Now there is a issues.tex file in the issues subdiretory
