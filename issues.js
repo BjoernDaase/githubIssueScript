@@ -1,11 +1,11 @@
 const request = require('request').defaults({headers: {'User-Agent': 'Test'}})
 const fs = require('fs')
 
-const group = 'hpi-swa-lab'//'hpi-swt2'
-const repository = 'BP2018RH1' //'vm-portal'
+const group = 'hpi-swt2'
+const repository = 'vm-portal'
 const maxRequestedIssueNumber = 1000            // should be enough
 
-const issueFilterLabels = 'team scaffold'       // a label the issues you want to work with must have 
+const issueFilterLabel = 'team scaffold'       // a label the issues you want to work with must have 
 const requestAdress = `https://api.github.com/repos/${group}/${repository}/issues?per_page=${maxRequestedIssueNumber}\n`;
 
 function issueData(issue){                      // parses the individual issues
@@ -59,29 +59,32 @@ function texAll(issues){    // appends all filtered issues in one file after par
     `
 
     for(const issue of issues){
-        if(issue.labels.map(x => x.name).includes(issueFilterLabel)){
-            text += texIt(...issueData(issue))
-        }
+        text += texIt(...issueData(issue))
     }
 
     text += '\\end{document}'
     return text
 }
 
-
-
 request(requestAdress, function (error, response, body) {
     let path = './issues/', title = 'issues.tex'
     if (!error) {
         let results = JSON.parse(body)
-        console.log(results)
-        /*fs.writeFile(path + title,
-            texAll(results), 
+        const relevantResults = results.filter(issue => issue.labels.map(x => x.name).includes(issueFilterLabel))
+
+        if (!fs.existsSync(path)) {
+            fs.mkdirSync(path);
+        }
+
+        fs.writeFile(path + title,
+            texAll(relevantResults), 
             (err) => {
                 if(err){
                     console.log(err)
                 }
-            })*/
+            })
+            
+            console.log(`Fetched ${relevantResults.length} issues and wrote them to ${title}`)
     }
     else {
         console.log('error:', error); // Print the error if one occurred
