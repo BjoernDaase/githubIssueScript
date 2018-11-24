@@ -1,4 +1,5 @@
 # Github Issue Script
+This script fetches issues from public github repositories and writes them to a tex file
 
 ## Installation
 * Clone the repository
