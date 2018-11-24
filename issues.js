@@ -1,11 +1,9 @@
 const request = require('request').defaults({headers: {'User-Agent': 'Test'}})
 const fs = require('fs')
+const config = require('./Configuration')
 
-const group = 'hpi-swt2'
-const repository = 'vm-portal'
-const maxRequestedIssueNumber = 1000            // should be enough
+const {group, repository, maxRequestedIssueNumber, issueFilterLabel} = config
 
-const issueFilterLabel = 'team scaffold'       // a label the issues you want to work with must have 
 const requestAdress = `https://api.github.com/repos/${group}/${repository}/issues?per_page=${maxRequestedIssueNumber}\n`;
 
 function issueData(issue){                      // parses the individual issues
