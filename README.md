@@ -17,5 +17,6 @@ Usually all configurations should be made in the Configuration.js file, where yo
 * Now there is a issues.tex file in the issues subdiretory
 * You should compile this with your local tex installation
 
-
-
+## Latex particularities
+* Every issue will get wrapped in a minipage so it does not get seperated at pagebreak (it also ensures the issue goes on a new page if it cannot fit at the left space)
+* Sections and subsection will not get prefixed with a number
