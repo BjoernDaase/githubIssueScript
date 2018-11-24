@@ -2,7 +2,7 @@ const request = require('request').defaults({headers: {'User-Agent': 'Test'}})
 const fs = require('fs')
 const config = require('./Configuration')
 
-const {group, repository, maxRequestedIssueNumber, issueFilterLabel} = config
+const {group, repository, maxRequestedIssueNumber, issueFilterLabel} = config.requestParameter
 
 const requestAdress = `https://api.github.com/repos/${group}/${repository}/issues?per_page=${maxRequestedIssueNumber}\n`;
 
@@ -10,15 +10,7 @@ function issueData(issue){                      // parses the individual issues
     return [
         issue.number,
         issue.title,
-        issue.body
-            .replace(/- \[ \]/g, '\\item ')
-            .replace(/- \[x\]/g, '\\item ')
-            .replace(/#/g, '\\#')
-            .replace(/!\[.*\]\(.*\)/g, '')      // filters github links that cannot be parsed by latex
-            .replace(/\*{0,2}Akzeptanzkriterien:?\*{0,2}/gi, '\\subsection{Akzeptanzkriterien:} \\begin{todolist}')
-            .replace(/\*{0,2}Beschreibung:?\*{0,2}/gi, '\\subsection{Beschreibung:} ')            
-            .replace(/\*{0,2}Priorität:?\*{0,2}/g, '\\end{todolist} \\subsection{Priorität:}')
-            .replace(/\*{0,2}Aufwandsschätzung:?\*{0,2}/g, '\\subsection{Aufwandsschätzung:}')]
+        config.substitutioner.substitute(issue.body)]
 }
 
 function texIt(number, header, body){
