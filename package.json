@@ -4,7 +4,7 @@
   "description": "",
   "main": "issues.js",
   "scripts": {
-    "fetchIssues": "node issues.js"
+    "fetchIssues": "node src/issues.js"
   },
   "author": "",
   "license": "ISC",

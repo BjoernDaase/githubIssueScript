@@ -1,6 +1,6 @@
 const request = require('request').defaults({headers: {'User-Agent': 'Test'}})
 const fs = require('fs')
-const config = require('./Configuration')
+const config = require('../Configuration')
 
 const {group, repository, maxRequestedIssueNumber, issueFilterLabel} = config.requestParameter
 
@@ -78,7 +78,7 @@ request(requestAdress, function (error, response, body) {
                 }
             })
             
-            console.log(`Fetched ${relevantResults.length} issues and wrote them to ${title}`)
+            console.log(`Fetched ${relevantResults.length} issues and wrote them to ${path}${title}`)
     }
     else {
         console.log('error:', error); // Print the error if one occurred

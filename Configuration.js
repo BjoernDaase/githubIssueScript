@@ -1,4 +1,4 @@
-const Substitutioner = require('./Substitutioner');
+const Substitutioner = require('./src/Substitutioner');
 const substitutioner = new Substitutioner();
 
 // Configuration of the request parameters that get send to github
