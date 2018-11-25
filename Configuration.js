@@ -5,11 +5,18 @@ const substitutioner = new Substitutioner();
 // The predefined settings are for: https://github.com/hpi-swt2/vm-portal
 
 const requestParameter = {
-    'group': 'hpi-swt2',                        // name of the orga the repo is part of
-    'repository': 'vm-portal',                  // name of the repository
-    'maxRequestedIssueNumber': 200,             // max number of overall fetched issues
-    'issueFilterLabel': 'team scaffold'         // the string of a label, that is applied to relevent issues (Rest gets ignored)
+    group: 'hpi-swt2',                        // name of the orga the repo is part of
+    repository: 'vm-portal',                  // name of the repository
+    maxRequestedIssueNumber: 200,             // max number of overall fetched issues
+    issueFilterLabel: 'team scaffold',        // the string of a label, that is applied to relevent issues (Rest gets ignored)
+    private: false                            // whether the repo is private or not
 };
+
+// you only need to fill in your credentials if your repo is private
+const credentials = {
+    username: 'your username',
+    password: 'your password or an OAuth Token'
+}
 
 /********************************************************************************/
 /**
@@ -44,4 +51,4 @@ substitutioner.addRule(/\*{0,2}Aufwandsschätzung:?\*{0,2}/g, '\\subsection{Aufw
 
 /**************************************************************************/
 
-module.exports = {requestParameter, substitutioner};
+module.exports = {requestParameter, credentials, substitutioner};

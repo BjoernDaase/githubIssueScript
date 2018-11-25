@@ -2,7 +2,8 @@ const request = require('request').defaults({headers: {'User-Agent': 'Test'}})
 const fs = require('fs')
 const config = require('../Configuration')
 
-const {group, repository, maxRequestedIssueNumber, issueFilterLabel} = config.requestParameter
+const {group, repository, maxRequestedIssueNumber, issueFilterLabel, private} = config.requestParameter
+const {username, password} = config.credentials
 
 const requestAdress = `https://api.github.com/repos/${group}/${repository}/issues?per_page=${maxRequestedIssueNumber}\n`;
 
@@ -62,10 +63,21 @@ function ensurePath(path){
     }
 }
 
-request(requestAdress, function (error, response, body) {
+function callback(error, response, body) {
     let path = './issues/', title = 'issues.tex'
     if (!error) {
         let results = JSON.parse(body)
+        
+        if(!(results instanceof Array)){
+            console.log('Could not fetch issues from ' + repository);
+            console.log('First check if any of this is misspelled: ')
+            console.log('\t' + group)
+            console.log('\t' + repository)
+            console.log('\nIf they are correct and the repository is private you probably missspelled your credentials')
+            return;
+        }
+
+
         const relevantResults = results.filter(issue => issue.labels.map(x => x.name).includes(issueFilterLabel))
 
         ensurePath(path);
@@ -78,10 +90,21 @@ request(requestAdress, function (error, response, body) {
                 }
             })
             
-            console.log(`Fetched ${relevantResults.length} issues and wrote them to ${path}${title}`)
+        console.log(`Fetched ${relevantResults.length} issues and wrote them to ${path}${title}`)
     }
     else {
         console.log('error:', error); // Print the error if one occurred
     }
-});
+}
 
+if(private){
+    requestFunction = request.get(requestAdress, {
+        'auth': {
+            'user': username,
+            'pass': password
+        }
+    }, callback)
+}
+else{
+    requestFunction = request.get(requestAdress, callback)
+}
