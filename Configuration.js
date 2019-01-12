@@ -5,18 +5,12 @@ const substitutioner = new Substitutioner();
 // The predefined settings are for: https://github.com/hpi-swt2/vm-portal
 
 const requestParameter = {
-    group: 'hpi-swt2',                        // name of the orga the repo is part of
-    repository: 'vm-portal',                  // name of the repository
-    maxRequestedIssueNumber: 200,             // max number of overall fetched issues
-    issueFilterLabel: 'team scaffold',        // the string of a label, that is applied to relevent issues (Rest gets ignored)
-    private: false                            // whether the repo is private or not
-};
-
-// you only need to fill in your credentials if your repo is private
-const credentials = {
-    username: 'your username',
-    password: 'your password or an OAuth Token'
-}
+    'group': 'hpi-swt2',                                  // name of the orga the repo is part of
+    'repository': 'vm-portal',                            // name of the repository
+    'maxRequestedIssueNumber': 200,                       // max number of overall fetched issues
+    'issueFilterLabel': 'team scaffold',                  // the string of a label, that is applied to relevent issues (Rest gets ignored)
+    'issueCreatedAfterDate' : '2018-12-05T15:00:00Z'      // only issues which were created after that date (format YYYY-MM-DDTHH:MM:SSZ)
+};  
 
 /********************************************************************************/
 /**
@@ -24,18 +18,48 @@ const credentials = {
  * The addRule method takes a regex and a string
  */
 
-// enables usage of # in the issue text, because it is a special character in markdown
+// Add rules for special characters
+substitutioner.addRule(/\\/g, '\\textbackslash '); // This one has to be the first rule because it replaces backslashes which are TeX control commands
+
 substitutioner.addRule(/#/g, '\\#');
+substitutioner.addRule(/&/g, '\\&');
+substitutioner.addRule(/_/g, '\\_'); // We have to use \txtit{} for that in the future beacuse _ underscore defines italic style
+substitutioner.addRule(/>/g, '\\textgreater ');
+substitutioner.addRule(/</g, '\\textless ');
+substitutioner.addRule(/~/g, '\\textasciitilde ');
+substitutioner.addRule(/~/g, '\\textasciitilde ');
+substitutioner.addRule(/{/g, '\\{ ');
+substitutioner.addRule(/}/g, '\\} ');
+substitutioner.addRule(/\^/g, '\\textasciicircum ');
+substitutioner.addRule(/\°/g, '\\circ ');
 
 // ignores github links
 substitutioner.addRule(/!\[.*\]\(.*\)/g, '');
 
+// ignores github comment lines
+substitutioner.addRule(/\[\/\/\].*/g, '');
+
+
+/* Parse BUGS */
+
 // Starts the description of the issue and makes 'Beschreibung:' a header
-substitutioner.addRule(/\*{0,2}Beschreibung:?\*{0,2}/gi, '\\subsection{Beschreibung:} ');
+substitutioner.addRule(/\*{0,2}Annex:?\*{0,2}/gi, '\\subsection{Annex:} ');
+
+// Starts the description of the issue and makes 'Beschreibung:' a header
+substitutioner.addRule(/\*{0,2}Summary:?\*{0,2}/gi, '\\subsection{Summary:} ');
+
+// Starts the description of the issue and makes 'Beschreibung:' a header
+substitutioner.addRule(/\*{0,2}Steps to Reproduce:?\*{0,2}/gi, '\\subsection{Steps to Reproduce:} ');
+
+
+/* Parse USER STORIES */
+
+// Starts the description of the issue and makes 'Beschreibung:' a header
+substitutioner.addRule(/\*{0,2}User Story:?\*{0,2}/gi, '\\subsection{User Story:} ');
 
 // Starts the description of the acceptance criterias, makes 'Akzeptanzkriterien:' a header
 // and starts a todolist in order to prefix the individual cirteriad with a checkbox
-substitutioner.addRule(/\*{0,2}Akzeptanzkriterien:?\*{0,2}/gi, '\\subsection{Akzeptanzkriterien:} \\begin{todolist}');
+substitutioner.addRule(/\*{0,2}Acceptance Criteria:?\*{0,2}/gi, '\\subsection{Acceptance Criteria:} \\begin{todolist}');
 
 // parse normal items/checkboxes
 substitutioner.addRule(/- \[ \]/g, '\\item ');
@@ -43,12 +67,14 @@ substitutioner.addRule(/- \[ \]/g, '\\item ');
 // parse activated items/checkboxes
 substitutioner.addRule(/- \[x\]/g, '\\item ');
 
-// Ends the todolist and makes 'Priorität:' a header
-substitutioner.addRule(/\*{0,2}Priorität:?\*{0,2}/g, '\\end{todolist} \\subsection{Priorität:}');
 
+
+// Ends the todolist and makes 'Priorität:' a header
+// substitutioner.addRule(/\*{0,2}Priorität:?\*{0,2}/g, '\\end{todolist} \\subsection{Priorität:}');
 // Makes 'Aufwandsschätzung:' a header
-substitutioner.addRule(/\*{0,2}Aufwandsschätzung:?\*{0,2}/g, '\\subsection{Aufwandsschätzung:}');
+// substitutioner.addRule(/\*{0,2}Aufwandsschätzung:?\*{0,2}/g, '\\subsection{Aufwandsschätzung:}');
+
 
 /**************************************************************************/
 
-module.exports = {requestParameter, credentials, substitutioner};
+module.exports = {requestParameter, substitutioner};
