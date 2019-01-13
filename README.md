@@ -6,12 +6,20 @@ This script fetches issues from public github repositories and writes them to a 
 * Navigate to the folder from the command line
 * Execute: 
 ``` npm install ```
+* If you wan't the .tex to be compiled automatically you also need ``` pdflatex ``` (works only under UNIXoid systems). On Debian based systems (e.g. Ubuntu) it can be installed by executing: ``` sudo apt install texlive-science ```. 
 
 ## Configuration
 Usually all configurations should be made in the Configuration.js file, where you can edit the request parameter (e.g. repo name) and define how the issue text should be transformed to latex. 
 
 ## Usage
 * Adjust the settings in the Configuration.js
+1. Generate a .pdf file (UNIXoid systems only)
+* navigate to the cloned folder
+* Make the ``` fetchIssues.sh ``` file executable by running:
+``` chmod +x fetchIssues.sh ```
+* Exexcute
+``` ./fetchIssues.sh ```
+2. Generare the .tex file only
 * In the cloned folder execute:
 ``` npm run fetchIssues ```
 * Now there is a issues.tex file in the issues subdiretory
