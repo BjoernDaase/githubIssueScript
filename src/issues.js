@@ -23,7 +23,7 @@ function texIt(number, header, body){           // wraps an issue and gives it a
     We know that it's the last subsection so we can close it at the end but we only want to do it if it's a User Story and not if it's a bug.
     The way we determine if it's a User Story atm is not nice but it works.
     */
-    if (body.includes('\\subsection{User Story:}')) {
+    if (body.includes('\\subsection{Acceptance Criteria:}')) {
         text += `\\end{todolist}`
     }
     text += '\\end{minipage}\n\n\n'
@@ -34,7 +34,7 @@ function texIt(number, header, body){           // wraps an issue and gives it a
 
 function texAll(issues){    // appends all filtered issues in one file after parsing them 
     let text = ''
-    text += '\\documentclass[11pt, a4paper]{article}\\pagenumbering{gobble} \\usepackage{enumitem,amssymb}\\newlist{todolist}{itemize}{2}\\setlist[todolist]{label=$\\square$}'
+    text += '\\documentclass[11pt, a4paper]{article}\\pagenumbering{gobble} \\usepackage[geometry]{ifsym} \\usepackage{enumitem,amssymb}\\newlist{todolist}{itemize}{2}\\setlist[todolist]{label=\\SmallSquare}'
     text += '\n\n\\date{}\\begin{document}'
     
     // some latex magic for not writing numbers berfore sections and subsections
